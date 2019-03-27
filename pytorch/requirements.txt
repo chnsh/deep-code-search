@@ -4,3 +4,4 @@ tables
 numpy
 scipy
 tqdm
+tables
