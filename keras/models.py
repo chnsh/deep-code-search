@@ -5,10 +5,10 @@ import logging
 import os
 
 import numpy as np
+from keras import backend as K
 from keras.engine import Input
 from keras.layers import Concatenate, Dot, Embedding, Dropout, Lambda, Activation, LSTM, Dense
 
-from keras import backend as K
 from keras.models import Model
 
 logger = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ class JointEmbeddingModel:
         # 1.embedding
         init_emb_weights = np.load(
             self.config['workdir'] + self.model_params['init_embed_weights_methname']) if \
-        self.model_params['init_embed_weights_methname'] is not None else None
+            self.model_params['init_embed_weights_methname'] is not None else None
         init_emb_weights = init_emb_weights if init_emb_weights is None else [init_emb_weights]
         embedding = Embedding(input_dim=self.data_params['n_words'],
                               output_dim=self.model_params.get('n_embed_dims', 100),
@@ -120,7 +120,7 @@ class JointEmbeddingModel:
         # 1.embedding
         init_emb_weights = np.load(
             self.config['workdir'] + self.model_params['init_embed_weights_tokens']) if \
-        self.model_params['init_embed_weights_tokens'] is not None else None
+            self.model_params['init_embed_weights_tokens'] is not None else None
         init_emb_weights = init_emb_weights if init_emb_weights is None else [init_emb_weights]
         embedding = Embedding(input_dim=self.data_params['n_words'],
                               output_dim=self.model_params.get('n_embed_dims', 100),
@@ -162,7 +162,7 @@ class JointEmbeddingModel:
         # 1.embedding
         init_emb_weights = np.load(
             self.config['workdir'] + self.model_params['init_embed_weights_desc']) if \
-        self.model_params['init_embed_weights_desc'] is not None else None
+            self.model_params['init_embed_weights_desc'] is not None else None
         init_emb_weights = init_emb_weights if init_emb_weights is None else [init_emb_weights]
         embedding = Embedding(input_dim=self.data_params['n_words'],
                               output_dim=self.model_params.get('n_embed_dims', 100),
