@@ -23,6 +23,7 @@ from utils import normalize, dot_np, gVar, sent2indexes
 from configs import get_config
 from data import load_dict, CodeSearchDataset, load_vecs, save_vecs
 from models import JointEmbeder
+from tensorboardX import SummaryWriter
 
 
 class CodeSearcher:
@@ -76,6 +77,7 @@ class CodeSearcher:
 
     ##### Training #####
     def train(self, model):
+        tensorboard_writer = SummaryWriter("runs/exp-1")
         log_every = self.conf['log_every']
         valid_every = self.conf['valid_every']
         save_every = self.conf['save_every']
@@ -106,15 +108,16 @@ class CodeSearcher:
                 loss.backward()
                 optimizer.step()
                 if itr % log_every == 0:
+                    tensorboard_writer.add_scalar("loss", np.mean(losses), itr)
                     logger.info(
                         'epo:[%d/%d] itr:%d Loss=%.5f' % (epoch, nb_epoch, itr, np.mean(losses)))
                     losses = []
                 itr = itr + 1
 
-                if epoch and epoch % valid_every == 0:
-                    logger.info("validating..")
-                    acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
-                    logger.info("acc1 {}".format(acc1))
+                # if epoch and epoch % valid_every == 0:
+                #     logger.info("validating..")
+                #     acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
+                #     logger.info("acc1 {}".format(acc1))
 
             if epoch and epoch % save_every == 0:
                 self.save_model(model, epoch)
