@@ -108,7 +108,7 @@ class CodeSearcher:
                 loss.backward()
                 optimizer.step()
                 if itr % log_every == 0:
-                    tensorboard_writer.add_scalar("loss", np.mean(losses), itr)
+                    tensorboard_writer.add_scalar("loss", np.mean(losses), epoch * 10 + itr)
                     logger.info(
                         'epo:[%d/%d] itr:%d Loss=%.5f' % (epoch, nb_epoch, itr, np.mean(losses)))
                     losses = []
