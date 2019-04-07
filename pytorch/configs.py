@@ -1,17 +1,17 @@
 def get_config():
     conf = {
-        'workdir': './data/github/',
+        'workdir': './data/vectors/',
         # data_params
         # training data
-        'train_name': 'train.methname.h5',
-        'train_api': 'train.apiseq.h5',
-        'train_tokens': 'train.tokens.h5',
-        'train_desc': 'train.desc.h5',
+        'train_name': 'train.methname.npy',
+        'train_api': 'train.apiseq.npy',
+        'train_tokens': 'train.tokens.npy',
+        'train_desc': 'train.desc.npy',
         # test data
-        'valid_name': 'test.methname.h5',
-        'valid_api': 'test.apiseq.h5',
-        'valid_tokens': 'test.tokens.h5',
-        'valid_desc': 'test.desc.h5',
+        'valid_name': 'test.methname.npy',
+        'valid_api': 'test.apiseq.npy',
+        'valid_tokens': 'test.tokens.npy',
+        'valid_desc': 'test.desc.npy',
         # use data (computing code vectors)
         'use_codebase': 'use.rawcode.txt',  # 'use.rawcode.h5'
         'use_names': 'use.methname.h5',
@@ -21,11 +21,11 @@ def get_config():
         'use_codevecs': 'use.codevecs.normalized.h5',  # 'use.codevecs.h5',
 
         # parameters
-        'name_len': 6,
-        'api_len': 30,
-        'tokens_len': 50,
-        'desc_len': 30,
-        'n_words': 10000,  # len(vocabulary) + 1
+        'name_len': 5,
+        'api_len': 45,
+        'tokens_len': 55,
+        'desc_len': 15,
+        'n_words': 10002,  # len(vocabulary) + 1
         # vocabulary info
         'vocab_name': 'vocab.methname.pkl',
         'vocab_api': 'vocab.apiseq.pkl',
@@ -46,7 +46,7 @@ def get_config():
             'top1': 0.4,
         },
         'log_every': 100,
-        'save_every': 10,
+        'save_every': 3,
         'reload': -1,
         # 970,#epoch that the model is reloaded from . If reload=0, then train from scratch
 

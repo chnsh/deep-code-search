@@ -21,7 +21,7 @@ import torch.nn.functional as F
 
 from utils import normalize, dot_np, gVar, sent2indexes
 from configs import get_config
-from data import load_dict, CodeSearchDataset, load_vecs, save_vecs
+from data import load_dict, CodeSearchDataset, load_vecs, save_vecs, CodeSearcherNumpyDataSet
 from models import JointEmbeder
 from tensorboardX import SummaryWriter
 
@@ -84,11 +84,11 @@ class CodeSearcher:
         batch_size = self.conf['batch_size']
         nb_epoch = self.conf['nb_epoch']
 
-        train_set = CodeSearchDataset(self.path,
-                                      self.conf['train_name'], self.conf['name_len'],
-                                      self.conf['train_api'], self.conf['api_len'],
-                                      self.conf['train_tokens'], self.conf['tokens_len'],
-                                      self.conf['train_desc'], self.conf['desc_len'])
+        train_set = CodeSearcherNumpyDataSet(self.path,
+                                             self.conf['train_name'], self.conf['name_len'],
+                                             self.conf['train_api'], self.conf['api_len'],
+                                             self.conf['train_tokens'], self.conf['tokens_len'],
+                                             self.conf['train_desc'], self.conf['desc_len'])
 
         data_loader = torch.utils.data.DataLoader(dataset=train_set,
                                                   batch_size=self.conf['batch_size'],
@@ -108,24 +108,26 @@ class CodeSearcher:
                 loss.backward()
                 optimizer.step()
                 if itr % log_every == 0:
-                    tensorboard_writer.add_scalar("loss", np.mean(losses), epoch * 10 + itr)
+                    tensorboard_writer.add_scalar("loss", np.mean(losses), epoch * 10 + itr // 100)
                     logger.info(
                         'epo:[%d/%d] itr:%d Loss=%.5f' % (epoch, nb_epoch, itr, np.mean(losses)))
                     losses = []
                 itr = itr + 1
 
-                # if epoch and epoch % valid_every == 0:
-                #     logger.info("validating..")
-                #     acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
-                #     logger.info("acc1 {}".format(acc1))
+                if epoch and epoch % valid_every == 0:
+                    logger.info("validating..")
+                    acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
+                    logger.info("acc1 {}".format(acc1))
 
             if epoch and epoch % save_every == 0:
                 self.save_model(model, epoch)
 
+        self.save_model(model, nb_epoch)
+
     ##### Evaluation #####
     def eval(self, model, poolsize, K):
         """
-        simple validation in a code pool. 
+        simple validation in a code pool.
         @param: poolsize - size of the code pool, if -1, load the whole test set
         """
 
@@ -180,11 +182,11 @@ class CodeSearcher:
             return idcg
 
         if self.valid_set is None:  # load test dataset
-            self.valid_set = CodeSearchDataset(self.path,
-                                               self.conf['valid_name'], self.conf['name_len'],
-                                               self.conf['valid_api'], self.conf['api_len'],
-                                               self.conf['valid_tokens'], self.conf['tokens_len'],
-                                               self.conf['valid_desc'], self.conf['desc_len'])
+            self.valid_set = CodeSearcherNumpyDataSet(self.path,
+                                                      self.conf['valid_name'], self.conf['name_len'],
+                                                      self.conf['valid_api'], self.conf['api_len'],
+                                                      self.conf['valid_tokens'], self.conf['tokens_len'],
+                                                      self.conf['valid_desc'], self.conf['desc_len'])
 
         data_loader = torch.utils.data.DataLoader(dataset=self.valid_set, batch_size=poolsize,
                                                   shuffle=True, drop_last=True, num_workers=1)
@@ -302,7 +304,7 @@ if __name__ == '__main__':
 
     elif args.mode == 'search':
         # search code based on a desc
-        searcher.load_codevecs()
+        # searcher.load_codevecs()
         searcher.load_codebase()
         while True:
             try:

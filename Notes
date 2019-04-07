@@ -1,2 +1,2 @@
-1. RNN for tokens
-2. Char RNN for description
+1. Try CNN before LSTM
+2. elmo for description RNN
