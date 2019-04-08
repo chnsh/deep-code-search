@@ -39,7 +39,7 @@ class SeqEncoder(nn.Module):
 
         self.embedding = nn.Embedding(vocab_size, emb_size, padding_idx=0)
         self.lstm = nn.LSTM(emb_size, hidden_size, batch_first=True, bidirectional=True)
-        for w in self.gru.parameters():  # initialize the gate weights with orthogonal
+        for w in self.lstm.parameters():  # initialize the gate weights with orthogonal
             if w.dim() > 1:
                 weight_init.orthogonal_(w)
 

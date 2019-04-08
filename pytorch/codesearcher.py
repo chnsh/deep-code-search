@@ -21,7 +21,7 @@ import torch.nn.functional as F
 
 from utils import normalize, dot_np, gVar, sent2indexes
 from configs import get_config
-from data import load_dict, CodeSearchDataset, load_vecs, save_vecs, CodeSearcherNumpyDataSet
+from data import load_dict, load_vecs, save_vecs, CodeSearcherNumpyDataSet
 from models import JointEmbeder
 from tensorboardX import SummaryWriter
 
@@ -114,10 +114,10 @@ class CodeSearcher:
                     losses = []
                 itr = itr + 1
 
-                if epoch and epoch % valid_every == 0:
-                    logger.info("validating..")
-                    acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
-                    logger.info("acc1 {}".format(acc1))
+                # if epoch and epoch % valid_every == 0:
+                #     logger.info("validating..")
+                #     acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
+                #     logger.info("acc1 {}".format(acc1))
 
             if epoch and epoch % save_every == 0:
                 self.save_model(model, epoch)
@@ -183,10 +183,13 @@ class CodeSearcher:
 
         if self.valid_set is None:  # load test dataset
             self.valid_set = CodeSearcherNumpyDataSet(self.path,
-                                                      self.conf['valid_name'], self.conf['name_len'],
+                                                      self.conf['valid_name'],
+                                                      self.conf['name_len'],
                                                       self.conf['valid_api'], self.conf['api_len'],
-                                                      self.conf['valid_tokens'], self.conf['tokens_len'],
-                                                      self.conf['valid_desc'], self.conf['desc_len'])
+                                                      self.conf['valid_tokens'],
+                                                      self.conf['tokens_len'],
+                                                      self.conf['valid_desc'],
+                                                      self.conf['desc_len'])
 
         data_loader = torch.utils.data.DataLoader(dataset=self.valid_set, batch_size=poolsize,
                                                   shuffle=True, drop_last=True, num_workers=1)
@@ -218,10 +221,10 @@ class CodeSearcher:
     ##### Compute Representation #####
     def repr_code(self, model):
         vecs = None
-        use_set = CodeSearchDataset(self.conf['workdir'],
-                                    self.conf['use_names'], self.conf['name_len'],
-                                    self.conf['use_apis'], self.conf['api_len'],
-                                    self.conf['use_tokens'], self.conf['tokens_len'])
+        use_set = CodeSearcherNumpyDataSet(self.conf['workdir'],
+                                           self.conf['use_names'], self.conf['name_len'],
+                                           self.conf['use_apis'], self.conf['api_len'],
+                                           self.conf['use_tokens'], self.conf['tokens_len'])
 
         data_loader = torch.utils.data.DataLoader(dataset=use_set, batch_size=1000,
                                                   shuffle=False, drop_last=False, num_workers=1)
@@ -297,14 +300,14 @@ if __name__ == '__main__':
 
     elif args.mode == 'eval':
         # evaluate for a particular epoch
-        searcher.eval(model, 1000, 10)
+        searcher.eval(model.eval(), 1000, 10)
 
     elif args.mode == 'repr_code':
-        vecs = searcher.repr_code(model)
+        vecs = searcher.repr_code(model.eval())
 
     elif args.mode == 'search':
         # search code based on a desc
-        # searcher.load_codevecs()
+        searcher.load_codevecs()
         searcher.load_codebase()
         while True:
             try:
@@ -314,7 +317,7 @@ if __name__ == '__main__':
                 print("Exception while parsing your input:")
                 traceback.print_exc()
                 break
-            codes, sims = searcher.search(model, query, n_results)
+            codes, sims = searcher.search(model.eval(), query, n_results)
             zipped = zip(codes, sims)
             results = '\n\n'.join(map(str, zipped))  # combine the result into a returning string
             print(results)
