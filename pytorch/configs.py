@@ -39,7 +39,7 @@ def get_config():
         'validation_split': 0.2,
         # 'optimizer': 'adam',
         'lr': 0.001,
-        'valid_every': 10,
+        'valid_every': 50,
         'n_eval': 100,
         'evaluate_all_threshold': {
             'mode': 'all',
