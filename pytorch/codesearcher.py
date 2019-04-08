@@ -117,6 +117,10 @@ class CodeSearcher:
                 if epoch and epoch % valid_every == 0:
                     logger.info("validating..")
                     acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
+                    tensorboard_writer.add_scalar("acc1", acc1, epoch)
+                    tensorboard_writer.add_scalar("mrr", mrr, epoch)
+                    tensorboard_writer.add_scalar("map", map, epoch)
+                    tensorboard_writer.add_scalar("ndcg", ndcg, epoch)
                     logger.info("acc1 {}".format(acc1))
 
             if epoch and epoch % save_every == 0:
