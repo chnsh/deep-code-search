@@ -8,15 +8,15 @@ def get_config():
         'train_tokens': 'train.tokens.npy',
         'train_desc': 'train.desc.npy',
         # test data
-        'valid_name': 'test.methname.npy',
-        'valid_api': 'test.apiseq.npy',
-        'valid_tokens': 'test.tokens.npy',
-        'valid_desc': 'test.desc.npy',
+        'valid_name': 'small.test.methname.npy',
+        'valid_api': 'small.test.apiseq.npy',
+        'valid_tokens': 'small.test.tokens.npy',
+        'valid_desc': 'small.test.desc.npy',
         # use data (computing code vectors)
-        'use_codebase': 'use.rawcode.txt',  # 'use.rawcode.h5'
-        'use_names': 'use.methname.h5',
-        'use_apis': 'use.apiseq.h5',
-        'use_tokens': 'use.tokens.h5',
+        'use_codebase': 'small.rawcode.txt',  # 'use.rawcode.h5'
+        'use_names': 'small.test.methname.npy',
+        'use_apis': 'small.test.apiseq.npy',
+        'use_tokens': 'small.test.tokens.npy',
         # results data(code vectors)
         'use_codevecs': 'use.codevecs.normalized.h5',  # 'use.codevecs.h5',
 
@@ -47,7 +47,7 @@ def get_config():
         },
         'log_every': 100,
         'save_every': 3,
-        'reload': -1,
+        'reload': 54,
         # 970,#epoch that the model is reloaded from . If reload=0, then train from scratch
 
         # model_params
