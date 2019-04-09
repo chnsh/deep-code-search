@@ -73,7 +73,7 @@ class CodeSearcher:
     def load_model(self, model, epoch):
         assert os.path.exists(
             self.path + 'models/epo%d.h5' % epoch), 'Weights at epoch %d not found' % epoch
-        model.load_state_dict(torch.load(self.path + 'models/epo%d.h5' % epoch))
+        model.load_state_dict(torch.load(self.path + 'models/epo%d.h5' % epoch, map_location='cpu'))
 
     ##### Training #####
     def train(self, model):

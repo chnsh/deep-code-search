@@ -102,12 +102,12 @@ class CodeSearcherNumpyDataSet(data.Dataset):
         """read training data(list of int arrays) from a hdf5 file"""
         self.training = False
         print("loading data...")
-        self.method_name = np.load(data_dir + f_name)
-        self.api_seq = np.load(data_dir + f_api)
-        self.tokens = np.load(data_dir + f_tokens)
+        self.method_name = np.load(data_dir + f_name).astype('int64')
+        self.api_seq = np.load(data_dir + f_api).astype('int64')
+        self.tokens = np.load(data_dir + f_tokens).astype('int64')
         if f_descs is not None:
             self.training = True
-            self.desc = np.load(data_dir + f_descs)
+            self.desc = np.load(data_dir + f_descs).astype('int64')
 
         assert self.method_name.shape[0] == self.api_seq.shape[0]
         assert self.api_seq.shape[0] == self.tokens.shape[0]
