@@ -47,7 +47,7 @@ def get_config():
         },
         'log_every': 100,
         'save_every': 3,
-        'reload': 60,
+        'reload': -1,
         # 970,#epoch that the model is reloaded from . If reload=0, then train from scratch
 
         # model_params
