@@ -9,7 +9,7 @@ import numpy as np
 random.seed(42)
 import threading
 import codecs
-from tqdm import tqdm
+from tqdm import tqdm, trange
 import logging
 
 logger = logging.getLogger(__name__)
@@ -114,14 +114,16 @@ class CodeSearcher:
                     losses = []
                 itr = itr + 1
 
-                if epoch and epoch % valid_every == 0:
-                    logger.info("validating..")
-                    acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
-                    tensorboard_writer.add_scalar("acc1", acc1, epoch)
-                    tensorboard_writer.add_scalar("mrr", mrr, epoch)
-                    tensorboard_writer.add_scalar("map", map, epoch)
-                    tensorboard_writer.add_scalar("ndcg", ndcg, epoch)
-                    logger.info("acc1 {}".format(acc1))
+            if epoch and epoch % valid_every == 0:
+                logger.info("validating..")
+                model = model.eval()
+                acc1, mrr, map, ndcg = self.eval(model, 1000, 1)
+                model = model.train()
+                tensorboard_writer.add_scalar("acc1", acc1, epoch)
+                tensorboard_writer.add_scalar("mrr", mrr, epoch)
+                tensorboard_writer.add_scalar("map", map, epoch)
+                tensorboard_writer.add_scalar("ndcg", ndcg, epoch)
+                logger.info("acc1 {}".format(acc1))
 
             if epoch and epoch % save_every == 0:
                 self.save_model(model, epoch)
@@ -202,7 +204,7 @@ class CodeSearcher:
         for names, apis, toks, descs, _ in tqdm(data_loader):
             names, apis, toks = gVar(names), gVar(apis), gVar(toks)
             code_repr = model.code_encoding(names, apis, toks)
-            for i in range(poolsize):
+            for i in trange(poolsize):
                 desc = gVar(descs[i].expand(poolsize, -1))
                 desc_repr = model.desc_encoding(desc)
                 n_results = K

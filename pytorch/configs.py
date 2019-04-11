@@ -13,10 +13,10 @@ def get_config():
         'valid_tokens': 'small.test.tokens.npy',
         'valid_desc': 'small.test.desc.npy',
         # use data (computing code vectors)
-        'use_codebase': 'small.rawcode.txt',  # 'use.rawcode.h5'
-        'use_names': 'small.test.methname.npy',
-        'use_apis': 'small.test.apiseq.npy',
-        'use_tokens': 'small.test.tokens.npy',
+        'use_codebase': 'full.rawcode.txt',  # 'use.rawcode.h5'
+        'use_names': 'train.methname.npy',
+        'use_apis': 'train.apiseq.npy',
+        'use_tokens': 'train.apiseq.npy',
         # results data(code vectors)
         'use_codevecs': 'use.codevecs.normalized.h5',  # 'use.codevecs.h5',
 

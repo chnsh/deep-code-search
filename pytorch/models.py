@@ -65,7 +65,7 @@ class JointEmbeder(nn.Module):
 
         self.name_encoder = SeqEncoder(config['n_words'], config['emb_size'], config['lstm_dims'])
         self.api_encoder = SeqEncoder(config['n_words'], config['emb_size'], config['lstm_dims'])
-        self.tok_encoder = BOWEncoder(config['n_words'], config['emb_size'], config['n_hidden'])
+        self.tok_encoder = SeqEncoder(config['n_words'], config['emb_size'], config['lstm_dims'])
         self.desc_encoder = SeqEncoder(config['n_words'], config['emb_size'], config['lstm_dims'])
         self.fuse = nn.Linear(config['emb_size'] + 4 * config['lstm_dims'], config['n_hidden'])
 
