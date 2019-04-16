@@ -35,11 +35,11 @@ def get_config():
         # training_params
         'batch_size': 64,
         'chunk_size': 100000,
-        'nb_epoch': 2000,
+        'nb_epoch': 50,
         'validation_split': 0.2,
         # 'optimizer': 'adam',
         'lr': 0.001,
-        'valid_every': 50,
+        'valid_every': 10,
         'n_eval': 100,
         'evaluate_all_threshold': {
             'mode': 'all',
@@ -47,7 +47,7 @@ def get_config():
         },
         'log_every': 100,
         'save_every': 3,
-        'reload': 60,
+        'reload': -1,
         # 970,#epoch that the model is reloaded from . If reload=0, then train from scratch
 
         # model_params
